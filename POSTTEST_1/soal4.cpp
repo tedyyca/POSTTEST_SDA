@@ -4,7 +4,6 @@ using namespace std;
 
 
 void tukarNilai(int **a, int **b) {
-    cout << "Dalam fungsi tukarNilai():" << endl;
     cout << "  Nilai **a sebelum: " << **a << endl;
     cout << "  Nilai **b sebelum: " << **b << endl;
     
