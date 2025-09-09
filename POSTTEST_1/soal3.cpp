@@ -40,7 +40,7 @@ int main() {
         cout << "Data Mahasiswa ke-" << (i + 1) <<endl;
         
         cout << "Nama: ";
-        cin.ignore(); // membersihkan buffer untuk input pertama
+        cin.ignore(); 
         getline(cin, mahasiswa[i].nama);
         
         cout << "NIM : ";
