@@ -37,7 +37,7 @@ int hitungDiagonalSekunder(int matriks[3][3]) {
 }
 
 int main() {
-    // Deklarasi dan inisialisasi matriks di awal
+    // Saya mendeklarasikan matriks di awal
     int matriks[3][3] = {
         {1, 2, 3},
         {4, 5, 6},
