@@ -9,12 +9,24 @@ struct Item {
     Item* next;
 };
 
-int getPosisiSisip(const string& nim) {
+int getJumlahAwal(const string& nim) {
     if (nim.empty()) return 1;
-    return (nim[nim.length() - 1] - '0') + 1;
+    if (nim.length() == 1) return nim[0] - '0';
+    string last2 = nim.substr(max(0, (int)nim.length() - 2));
+    try {
+        return stoi(last2);
+    } catch (...) {
+        return 1;
+    }
 }
 
-// Fungsi tambah item baru di akhir
+int getPosisiSisip(const string& nim) {
+    if (nim.empty()) return 1;
+    char last = nim[nim.length() - 1];
+    if (last < '0' || last > '9') return 1;
+    return (last - '0') + 1;
+}
+
 void tambahItem(Item*& head, const string& nama, const string& tipe, int jumlah) {
     Item* baru = new Item{nama, jumlah, tipe, nullptr};
     if (!head) {
@@ -45,7 +57,6 @@ void sisipItem(Item*& head, const string& nama, const string& tipe, int jumlah, 
     cout << "Item berhasil disisipkan!\n";
 }
 
-// Fungsi hapus item terakhir
 void hapusItemTerakhir(Item*& head) {
     if (!head) {
         cout << "Inventory kosong!\n";
@@ -71,8 +82,7 @@ void gunakanItem(Item*& head, const string& namaCari) {
         if (temp->namaItem == namaCari) {
             temp->jumlah--;
             cout << "Item '" << namaCari << "' digunakan! Sisa: " << temp->jumlah << endl;
-            if (temp->jumlah == 0) {
-                // Hapus node
+            if (temp->jumlah <= 0) {
                 if (!prev) {
                     head = temp->next;
                 } else {
@@ -90,38 +100,42 @@ void gunakanItem(Item*& head, const string& namaCari) {
 }
 
 void tampilkanInventory(Item* head) {
-    cout << "+-----------------------------+\n";
-    cout << "|      INVENTORY GAME         |\n";
-    cout << "+-----------------------------+\n";
+    cout << "\n+---------------------------------------------+\n";
+    cout << "|                INVENTORY GAME                |\n";
+    cout << "+-----------------------------------------------+\n";
     if (!head) {
-        cout << "|      Inventory Kosong       |\n";
+        cout << "|          Inventory Kosong                   |\n";
     } else {
         Item* temp = head;
         int idx = 1;
         while (temp) {
-            cout << idx << ". " << temp->namaItem << " (" << temp->tipe << ") - Jumlah: " << temp->jumlah << endl;
+            cout << "| " << idx << ". " << temp->namaItem 
+                 << " (" << temp->tipe << ") - Jumlah: " 
+                 << temp->jumlah << "\n";
             temp = temp->next;
             idx++;
         }
     }
-    cout << "+-----------------------------+\n";
+    cout << "+---------------------------------------------+\n";
 }
 
 int main() {
     string nama, nim;
-    cout << "Masukkan Nama: ";
+    cout << "Masukkan Nama : ";
     getline(cin, nama);
-    cout << "Masukkan NIM: ";
+    cout << "Masukkan NIM  : ";
     getline(cin, nim);
 
-    Item* inventory = nullptr;
+    int jumlahAwal = getJumlahAwal(nim);
     int posisiSisip = getPosisiSisip(nim);
 
+    Item* inventory = nullptr;
     int pilihan;
+
     do {
         cout << "\n+--------------------------------------------------+\n";
-        cout << "|      GAME INVENTORY MANAGEMENT                   |\n";
-        cout << "|   [ " << nama << " - " << nim << " ]\n";
+        cout << "|           GAME INVENTORY MANAGEMENT              |\n";
+        cout << "|        [ " << nama << " - " << nim << " ]\n";
         cout << "+--------------------------------------------------+\n";
         cout << "| 1. Tambah Item Baru                              |\n";
         cout << "| 2. Sisipkan Item                                 |\n";
@@ -130,25 +144,30 @@ int main() {
         cout << "| 5. Tampilkan Inventory                           |\n";
         cout << "| 0. Keluar                                        |\n";
         cout << "+--------------------------------------------------+\n";
-        cout << "Pilih menu: ";
-        cin >> pilihan;
-        cin.ignore();
+        cout << "Pilih menu : ";
+        if (!(cin >> pilihan)) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            pilihan = -1;
+        } else {
+            cin.ignore();
+        }
 
         if (pilihan == 1) {
             string namaItem, tipe;
-            cout << "Nama Item: "; getline(cin, namaItem);
-            cout << "Tipe Item: "; getline(cin, tipe);
-            tambahItem(inventory, namaItem, tipe, 3); // jumlah selalu 3
+            cout << "Nama Item : "; getline(cin, namaItem);
+            cout << "Tipe Item : "; getline(cin, tipe);
+            tambahItem(inventory, namaItem, tipe, jumlahAwal);
         } else if (pilihan == 2) {
             string namaItem, tipe;
-            cout << "Nama Item: "; getline(cin, namaItem);
-            cout << "Tipe Item: "; getline(cin, tipe);
-            sisipItem(inventory, namaItem, tipe, 3, posisiSisip); // jumlah selalu 3
+            cout << "Nama Item : "; getline(cin, namaItem);
+            cout << "Tipe Item : "; getline(cin, tipe);
+            sisipItem(inventory, namaItem, tipe, jumlahAwal, posisiSisip);
         } else if (pilihan == 3) {
             hapusItemTerakhir(inventory);
         } else if (pilihan == 4) {
             string namaItem;
-            cout << "Nama Item yang ingin digunakan: "; getline(cin, namaItem);
+            cout << "Nama Item yang ingin digunakan : "; getline(cin, namaItem);
             gunakanItem(inventory, namaItem);
         } else if (pilihan == 5) {
             tampilkanInventory(inventory);
