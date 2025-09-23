@@ -63,12 +63,12 @@ void sisipItem(Item*& head, Item*& tail, const string& nama, const string& tipe,
         }
         
         if (!temp) {
-            // Posisi di akhir
+            // item masuk di paling belakang
             tail->next = baru;
             baru->prev = tail;
             tail = baru;
         } else {
-            // Sisip di tengah
+            // item masuk di tengah
             baru->next = temp;
             baru->prev = temp->prev;
             if (temp->prev) {
@@ -110,7 +110,7 @@ void gunakanItem(Item*& head, Item*& tail, const string& namaCari) {
             if (temp->jumlah <= 0) {
                 cout << "Item '" << namaCari << "' habis dan dihapus dari inventory.\n";
                 
-                // Update pointer
+                // Update pointer bang
                 if (temp->prev) temp->prev->next = temp->next;
                 else head = temp->next;
                 
@@ -283,7 +283,7 @@ int main() {
         }
     } while (pilihan != 0);
 
-    // Cleanup memory
+    // bersihin memori
     while (inventory) {
         Item* temp = inventory;
         inventory = inventory->next;
